@@ -1,24 +1,71 @@
 import React, { Component } from 'react';
 import Card from '../../components/Card/Card';
 import classes from './EditToDo.module.css';
+import axios from 'axios';
 
 class EditToDo extends Component {
   state = {
-    todoList: [
-      { title: 'test1', memo: 'test2' },
-      { title: 'test3', memo: 'test4' },
-    ],
+    todoList: [],
     title: '',
     memo: '',
+  };
+
+  componentDidMount = () => {
+    axios
+      .get('https://react-todo-app-57b96.firebaseio.com/todoList.json')
+      .then((res) => {
+        console.log(res.data);
+        let dataList = [];
+        for (let key in res.data) {
+          dataList.push(res.data[key]);
+        }
+        let todoList = dataList[0];
+        this.setState({ todoList: todoList });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  registTodoToDB = (newTodoList) => {
+    axios
+      .delete('https://react-todo-app-57b96.firebaseio.com/todoList.json')
+      .then((res) => {
+        console.log(res);
+        axios
+          .post(
+            'https://react-todo-app-57b96.firebaseio.com/todoList.json',
+            newTodoList
+          )
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   addToDoHandler = () => {
     console.log('add todo handler');
     if (this.state.title !== '') {
-      let newToDo = [...this.state.todoList];
-      newToDo.push({ title: this.state.title, memo: this.state.memo });
+      let newToDo = [];
+      if (this.state.todoList) {
+        newToDo = [...this.state.todoList];
+      }
+      newToDo.push({
+        title: this.state.title,
+        memo: this.state.memo,
+        date: new Date().toUTCString(),
+      });
       console.log(newToDo);
-      this.setState({ todoList: newToDo });
+
+      this.registTodoToDB(newToDo);
+
+      this.setState({ todoList: newToDo, memo: '', title: '' });
     }
   };
 
@@ -26,25 +73,28 @@ class EditToDo extends Component {
     this.setState({ [inputType]: inputText });
   };
 
-  clickHandler = (index) => {
+  cardClickHandler = (index) => {
     console.log('clicked!', index);
     let newTodoList = [...this.state.todoList];
     console.log('before', newTodoList);
     newTodoList.splice(index, 1);
     console.log(newTodoList);
+    this.registTodoToDB(newTodoList);
     this.setState({ todoList: newTodoList });
   };
 
   render() {
     let todoList = null;
-    if (this.state.todoList.length > 0) {
+    if (this.state.todoList && this.state.todoList.length > 0) {
       todoList = [...this.state.todoList];
       todoList = todoList.map((el, index) => {
         return (
           <Card
             title={el.title}
             memo={el.memo}
-            clicked={() => this.clickHandler(index)}
+            date={el.date}
+            clicked={() => this.cardClickHandler(index)}
+            key={index}
           />
         );
       });
