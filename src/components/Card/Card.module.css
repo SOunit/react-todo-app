@@ -1,0 +1,15 @@
+.Card {
+  padding: 5px;
+  background-color: pink;
+  box-sizing: border-box;
+  border: 2px solid rgb(252, 72, 102);
+  color: rgb(252, 72, 102);
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.Card h2,
+.Card p {
+  margin: 0;
+  padding: 0;
+}
