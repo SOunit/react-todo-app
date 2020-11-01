@@ -25,6 +25,5 @@ yarn-error.log*
 # log
 *.log
 
-.firebase
-.firebase/
+#.firebase
 /.firebase
