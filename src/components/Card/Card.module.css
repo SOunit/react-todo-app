@@ -1,9 +1,6 @@
 .Card {
   padding: 5px;
-  background-color: pink;
   box-sizing: border-box;
-  border: 2px solid rgb(252, 72, 102);
-  color: rgb(252, 72, 102);
   font-size: 22px;
   margin-bottom: 12px;
 }
@@ -12,4 +9,26 @@
 .Card p {
   margin: 0;
   padding: 0;
+}
+
+.Created {
+  border: 2px solid rgb(2, 98, 177);
+  background-color: rgb(172, 205, 255);
+  color: rgb(2, 98, 177);
+}
+
+.Delete {
+  border: 2px solid rgb(252, 72, 102);
+  background-color: pink;
+  color: rgb(252, 72, 102);
+}
+
+.Success {
+  border: 2px solid rgb(2, 70, 2);
+  background-color: rgb(26, 255, 37);
+  color: rgb(2, 70, 2);
+}
+
+.Button {
+  padding: 10px;
 }

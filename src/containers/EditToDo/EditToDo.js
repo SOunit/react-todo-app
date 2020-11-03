@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Card from '../../components/Card/Card';
 import classes from './EditToDo.module.css';
 import axios from 'axios';
+import * as consts from '../../const/const';
 
 class EditToDo extends Component {
   state = {
@@ -60,6 +61,7 @@ class EditToDo extends Component {
         title: this.state.title,
         memo: this.state.memo,
         date: new Date().toUTCString(),
+        status: consts.CARD_STATUS_CREATED,
       });
       console.log(newToDo);
 
@@ -73,12 +75,16 @@ class EditToDo extends Component {
     this.setState({ [inputType]: inputText });
   };
 
-  cardClickHandler = (index) => {
+  cardDeleteHandler = (index) => {
     console.log('clicked!', index);
+
+    // create new todo list
     let newTodoList = [...this.state.todoList];
     console.log('before', newTodoList);
-    newTodoList.splice(index, 1);
-    console.log(newTodoList);
+
+    // create new todo
+    newTodoList[index].status = consts.CARD_STATUS_DELETE;
+
     this.registTodoToDB(newTodoList);
     this.setState({ todoList: newTodoList });
   };
@@ -93,7 +99,8 @@ class EditToDo extends Component {
             title={el.title}
             memo={el.memo}
             date={el.date}
-            clicked={() => this.cardClickHandler(index)}
+            status={el.status}
+            clicked={() => this.cardDeleteHandler(index)}
             key={index}
           />
         );
