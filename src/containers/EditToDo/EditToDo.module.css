@@ -1,6 +1,7 @@
 .EditToDo {
   width: 80%;
   margin: 0 auto;
+  padding-top: 126px;
 }
 
 .Label {
@@ -24,5 +25,8 @@
   border-radius: 5px;
   font-size: 32px;
   font-weight: bold;
+  display: block;
+  width: 300px;
+  margin: 0 auto;
   margin-bottom: 12px;
 }
