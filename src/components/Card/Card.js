@@ -28,8 +28,10 @@ const card = (props) => {
   // set up buttons
   let buttons = (
     <div>
-      <button className={classes.Success}>Success</button>
-      <button className={classes.Delete} onClick={props.clicked}>
+      <button className={classes.Success} onClick={props.onSuccess}>
+        Success
+      </button>
+      <button className={classes.Delete} onClick={props.onDelete}>
         Delete
       </button>
     </div>
@@ -38,7 +40,12 @@ const card = (props) => {
   if (props.status !== consts.CARD_STATUS_CREATED) {
     buttons = (
       <div>
-        <button className={buttonClassList}>Move</button>
+        <button className={buttonClassList} onClick={props.onMove}>
+          Move
+        </button>
+        <button className={buttonClassList} onClick={props.onBack}>
+          Back
+        </button>
       </div>
     );
   }
