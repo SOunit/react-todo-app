@@ -3,6 +3,7 @@ import Card from '../../components/Card/Card';
 import classes from './EditToDo.module.css';
 import axios from 'axios';
 import * as consts from '../../const/const';
+import CardAddController from '../../components/CardAddController/CardAddController';
 
 class EditToDo extends Component {
   state = {
@@ -11,7 +12,7 @@ class EditToDo extends Component {
     memo: '',
   };
 
-  componentDidMount = () => {
+  getTodoList = () => {
     axios
       .get('https://react-todo-app-57b96.firebaseio.com/todoList.json')
       .then((res) => {
@@ -28,14 +29,18 @@ class EditToDo extends Component {
       });
   };
 
-  registTodoToDB = (newTodoList) => {
+  componentDidMount = () => {
+    this.getTodoList();
+  };
+
+  registDB = (newTodoList, jsonName) => {
     axios
-      .delete('https://react-todo-app-57b96.firebaseio.com/todoList.json')
+      .delete('https://react-todo-app-57b96.firebaseio.com/' + jsonName)
       .then((res) => {
         console.log(res);
         axios
           .post(
-            'https://react-todo-app-57b96.firebaseio.com/todoList.json',
+            'https://react-todo-app-57b96.firebaseio.com/' + jsonName,
             newTodoList
           )
           .then((res) => {
@@ -48,6 +53,14 @@ class EditToDo extends Component {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  registDone = (newTodoList) => {
+    this.registDB(newTodoList, 'doneList.json');
+  };
+
+  registTodo = (newTodoList) => {
+    this.registDB(newTodoList, 'todoList.json');
   };
 
   addToDoHandler = () => {
@@ -65,7 +78,7 @@ class EditToDo extends Component {
       });
       console.log(newToDo);
 
-      this.registTodoToDB(newToDo);
+      this.registTodo(newToDo);
 
       this.setState({ todoList: newToDo, memo: '', title: '' });
     }
@@ -75,7 +88,7 @@ class EditToDo extends Component {
     this.setState({ [inputType]: inputText });
   };
 
-  cardDeleteHandler = (index) => {
+  cardChangeHandler = (index, mode) => {
     console.log('clicked!', index);
 
     // create new todo list
@@ -83,9 +96,31 @@ class EditToDo extends Component {
     console.log('before', newTodoList);
 
     // create new todo
-    newTodoList[index].status = consts.CARD_STATUS_DELETE;
+    newTodoList[index].status = mode;
 
-    this.registTodoToDB(newTodoList);
+    this.registTodo(newTodoList);
+    this.setState({ todoList: newTodoList });
+  };
+
+  cardMoveHandler = (index) => {
+    console.log('clicked!', index);
+
+    // create new todo list
+    let newTodoList = [...this.state.todoList];
+    console.log('before', newTodoList);
+
+    // add to list
+    const mode = newTodoList.state;
+    if (mode === consts.CARD_STATUS_SUCCESS) {
+    }
+
+    // fix me
+    this.registDone(newTodoList[index]);
+
+    // delete from list
+    newTodoList.splice(index, 1);
+
+    this.registTodo(newTodoList);
     this.setState({ todoList: newTodoList });
   };
 
@@ -100,7 +135,16 @@ class EditToDo extends Component {
             memo={el.memo}
             date={el.date}
             status={el.status}
-            clicked={() => this.cardDeleteHandler(index)}
+            onDelete={() =>
+              this.cardChangeHandler(index, consts.CARD_STATUS_DELETE)
+            }
+            onSuccess={() =>
+              this.cardChangeHandler(index, consts.CARD_STATUS_SUCCESS)
+            }
+            onBack={() =>
+              this.cardChangeHandler(index, consts.CARD_STATUS_CREATED)
+            }
+            onMove={() => this.cardMoveHandler(index)}
             key={index}
           />
         );
@@ -108,37 +152,12 @@ class EditToDo extends Component {
     }
     return (
       <main className={classes.EditToDo}>
-        <div>
-          <label for="title" className={classes.Label}>
-            Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={this.state.title}
-            onInput={(e) => this.inputChangeHandler(e.target.value, 'title')}
-            className={classes.Input}
-          ></input>
-        </div>
-        <div>
-          <label for="memo" className={classes.Label}>
-            Memo
-          </label>
-          <input
-            type="text"
-            name="memo"
-            id="memo"
-            value={this.state.memo}
-            onInput={(e) => this.inputChangeHandler(e.target.value, 'memo')}
-            className={classes.Input}
-          ></input>
-        </div>
-        <input
-          type="button"
-          value="Add"
-          onClick={this.addToDoHandler}
-          className={classes.Button}
+        <CardAddController
+          title={this.state.title}
+          memo={this.state.memo}
+          onTitleInput={(e) => this.inputChangeHandler(e.target.value, 'title')}
+          onMemoInput={(e) => this.inputChangeHandler(e.target.value, 'memo')}
+          onAdd={this.addToDoHandler}
         />
         {todoList}
       </main>
