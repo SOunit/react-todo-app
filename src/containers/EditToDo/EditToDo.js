@@ -4,6 +4,8 @@ import axios from 'axios';
 import * as consts from '../../const/const';
 import CardAddController from '../../components/CardAddController/CardAddController';
 import Cards from '../../components/Cards/Cards';
+import * as actions from '../../store/actions/index';
+import { connect } from 'react-redux';
 
 class EditToDo extends Component {
   state = {
@@ -142,4 +144,10 @@ class EditToDo extends Component {
   }
 }
 
-export default EditToDo;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onInitTodo: () => dispatch(actions.initTodo()),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(EditToDo);

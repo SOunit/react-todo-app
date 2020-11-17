@@ -4,18 +4,18 @@ import Cards from '../../components/Cards/Cards';
 
 class Done extends Component {
   state = {
-    deleteList: [],
+    doneList: [],
   };
 
   componentDidMount = () => {
-    this.setState({ deleteList: this.props.deleteList });
+    this.setState({ doneList: this.props.doneList });
   };
 
   render = () => {
     return (
       <div>
         <h2>Done page</h2>
-        <Cards cardList={this.props.deleteList} />
+        <Cards cardList={this.props.doneList} />
       </div>
     );
   };
@@ -23,7 +23,7 @@ class Done extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    deleteList: state.deleteList,
+    doneList: state.doneList,
   };
 };
 
