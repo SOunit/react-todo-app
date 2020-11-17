@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './Card.module.css';
-import * as consts from '../../const/const';
+import * as consts from '../../../const/const';
 
 const card = (props) => {
   // setup class name
