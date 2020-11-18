@@ -8,15 +8,18 @@ export const setTodo = (todo) => {
   };
 };
 
+export const addTodo = (todo) => {
+  console.log('[action] add todo');
+  console.log(todo);
+  return {
+    type: actionTypes.ADD_TODO,
+    todo: todo,
+  };
+};
+
 export const initTodo = () => {
-  return (dispatch) => {
-    axios
-      .get('https://react-todo-app-57b96.firebaseio.com/todoList.json')
-      .then((res) => {
-        dispatch(setTodo(res.data));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  console.log('[init todo]');
+  return {
+    type: actionTypes.SET_TODO,
   };
 };

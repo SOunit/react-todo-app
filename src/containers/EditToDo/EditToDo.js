@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 class EditToDo extends Component {
   state = {
-    todoList: [{ date: 'aaa', memo: 'memo', status: '3', title: 'to do item' }],
+    // todoList: [{ date: 'aaa', memo: 'memo', status: '3', title: 'to do item' }],
     title: '',
     memo: '',
   };
@@ -31,7 +31,11 @@ class EditToDo extends Component {
   };
 
   componentDidMount = () => {
-    this.getTodoList();
+    console.log(this.props.doneList);
+    console.log(this.props.todoList);
+    console.log(this.props.deleteList);
+    this.props.onInitTodo();
+    // this.getTodoList();
   };
 
   registDB = (newTodoList, jsonName) => {
@@ -132,10 +136,17 @@ class EditToDo extends Component {
           memo={this.state.memo}
           onTitleInput={(e) => this.inputChangeHandler(e.target.value, 'title')}
           onMemoInput={(e) => this.inputChangeHandler(e.target.value, 'memo')}
-          onAdd={this.addToDoHandler}
+          onAdd={() =>
+            this.props.onAddTodo({
+              title: this.state.title,
+              memo: this.state.memo,
+              status: consts.CARD_STATUS_CREATED,
+              date: new Date().toISOString(),
+            })
+          }
         />
         <Cards
-          cardList={this.state.todoList}
+          cardList={this.props.todoList}
           onChange={this.cardChangeHandler}
           onMove={this.cardMoveHandler}
         />
@@ -144,10 +155,19 @@ class EditToDo extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state) => {
   return {
-    onInitTodo: () => dispatch(actions.initTodo()),
+    todoList: state.todoList,
+    doneList: state.doneList,
+    deleteList: state.deleteList,
   };
 };
 
-export default connect(null, mapDispatchToProps)(EditToDo);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onInitTodo: () => dispatch(actions.initTodo()),
+    onAddTodo: (todo) => dispatch(actions.addTodo(todo)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditToDo);

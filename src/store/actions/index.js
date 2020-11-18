@@ -1,1 +1,1 @@
-export { initTodo } from './todo.js';
+export { initTodo, addTodo } from './todo.js';

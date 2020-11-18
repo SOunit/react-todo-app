@@ -31,14 +31,34 @@ const initialState = {
 const setTodo = (state, action) => {
   return {
     ...state,
-    todo: action.todo,
+  };
+};
+
+const addTodo = (state, action) => {
+  console.log('[reducer] add todo');
+  console.log(action.todo);
+  const newTodoList = [...state.todoList];
+  console.log(state);
+  console.log(state.todoList);
+  // const newTodoList = [];
+  newTodoList.push(action.todo);
+  return {
+    ...state,
+    todoList: newTodoList,
   };
 };
 
 const reducer = (state = initialState, action) => {
-  switch (action) {
+  console.log('reducer!!!');
+
+  console.log(state);
+
+  switch (action.type) {
     case actionTypes.SET_TODO:
       return setTodo(state, action);
+    case actionTypes.ADD_TODO:
+      console.log('[reducer add todo]');
+      return addTodo(state, action);
     default:
       return state;
   }
